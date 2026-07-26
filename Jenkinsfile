@@ -113,39 +113,49 @@ pipeline {
     }
 }
         stage('Install Cluster Addons') {
-
     steps {
-
         sh '''
+            VPC_ID=$(aws eks describe-cluster \
+                --name platform-demo-eks \
+                --region ap-south-1 \
+                --query "cluster.resourcesVpcConfig.vpcId" \
+                --output text)
 
-        VPC_ID=$(aws eks describe-cluster \
-            --name platform-demo-eks \
-            --region ap-south-1 \
-            --query "cluster.resourcesVpcConfig.vpcId" \
-            --output text)
+            if [ -z "$VPC_ID" ]; then
+                echo "ERROR: Failed to discover VPC ID"
+                exit 1
+            fi
 
-        if [ -z "$VPC_ID" ]; then
-            echo "ERROR: Failed to discover VPC ID"
-            exit 1
-        fi
+            echo "Detected VPC ID: $VPC_ID"
 
-        echo "Detected VPC ID: $VPC_ID"
+            helm repo add eks https://aws.github.io/eks-charts || true
+            helm repo add metrics-server https://kubernetes-sigs.github.io/metrics-server || true
 
-        helm repo add eks https://aws.github.io/eks-charts || true
-        helm repo add metrics-server https://kubernetes-sigs.github.io/metrics-server || true
+            helm repo update
 
-        helm repo update
+            echo "Installing Metrics Server..."
 
-        helm upgrade --install metrics-server \
-            metrics-server/metrics-server \
-            -n kube-system
+            helm upgrade --install metrics-server \
+                metrics-server/metrics-server \
+                -n kube-system
 
-        helm upgrade --install aws-load-balancer-controller \
-            eks/aws-load-balancer-controller \
-            -n kube-system \
-            -f helm/aws-load-balancer-controller/values.yaml \
-            --set vpcId=$VPC_ID
+            echo "Installing AWS Load Balancer Controller..."
 
+            helm upgrade --install aws-load-balancer-controller \
+                eks/aws-load-balancer-controller \
+                -n kube-system \
+                -f helm/aws-load-balancer-controller/values.yaml \
+                --set vpcId=$VPC_ID
+
+            echo "Waiting for AWS Load Balancer Controller to become ready..."
+
+            kubectl wait \
+                --for=condition=Available \
+                deployment/aws-load-balancer-controller \
+                -n kube-system \
+                --timeout=300s
+
+            echo "AWS Load Balancer Controller is ready."
         '''
     }
 }
