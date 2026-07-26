@@ -179,7 +179,8 @@ pipeline {
         sh '''
             echo "Waiting for ALB..."
 
-            for i in {1..30}; do
+            i=1
+            while [ $i -le 30 ]; do
 
                 ALB=$(kubectl get ingress platform-ingress \
                   -n ${NAMESPACE} \
@@ -191,6 +192,8 @@ pipeline {
 
                 echo "ALB not ready yet... waiting 10 seconds"
                 sleep 10
+
+                i=$((i+1))
             done
 
             if [ -z "$ALB" ]; then
