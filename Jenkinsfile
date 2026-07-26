@@ -210,12 +210,14 @@ pipeline {
 
             if [ -z "$ALB" ]; then
                 echo "ERROR: ALB hostname not found."
+                kubectl describe ingress platform-ingress -n ${NAMESPACE}
                 exit 1
             fi
 
             echo "ALB: $ALB"
-
             echo "Waiting for application..."
+
+            HTTP_CODE=""
 
             i=1
             while [ $i -le 30 ]; do
@@ -235,8 +237,12 @@ pipeline {
                 i=$((i+1))
             done
 
-            echo "ERROR: Application never became healthy."
-            exit 1
+            if [ "$HTTP_CODE" != "200" ]; then
+                echo "ERROR: Application never became healthy."
+                exit 1
+            fi
+
+            echo "Smoke test passed successfully."
         '''
     }
 }
