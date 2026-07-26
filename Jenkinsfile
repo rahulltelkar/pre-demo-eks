@@ -154,6 +154,9 @@ pipeline {
                 deployment/aws-load-balancer-controller \
                 -n kube-system \
                 --timeout=300s
+            
+            echo "Waiting 30 seconds for webhook to become fully ready..."
+            sleep 30
 
             echo "AWS Load Balancer Controller is ready."
         '''
