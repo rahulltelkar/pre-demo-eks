@@ -1,7 +1,5 @@
 clusterName: platform-demo-eks
 
-vpcId: vpc-0c8f9b25a7b6c9467
-
 replicaCount: 1
 
 serviceAccount:
