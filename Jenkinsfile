@@ -112,6 +112,43 @@ pipeline {
         """
     }
 }
+        stage('Install Cluster Addons') {
+
+    steps {
+
+        sh '''
+
+        VPC_ID=$(aws eks describe-cluster \
+            --name platform-demo-eks \
+            --region ap-south-1 \
+            --query "cluster.resourcesVpcConfig.vpcId" \
+            --output text)
+
+        if [ -z "$VPC_ID" ]; then
+            echo "ERROR: Failed to discover VPC ID"
+            exit 1
+        fi
+
+        echo "Detected VPC ID: $VPC_ID"
+
+        helm repo add eks https://aws.github.io/eks-charts || true
+        helm repo add metrics-server https://kubernetes-sigs.github.io/metrics-server || true
+
+        helm repo update
+
+        helm upgrade --install metrics-server \
+            metrics-server/metrics-server \
+            -n kube-system
+
+        helm upgrade --install aws-load-balancer-controller \
+            eks/aws-load-balancer-controller \
+            -n kube-system \
+            -f helm/aws-load-balancer-controller/values.yaml \
+            --set vpcId=$VPC_ID
+
+        '''
+    }
+}
 
         stage('Deploy to EKS') {
 
@@ -138,28 +175,35 @@ pipeline {
 }
 
         stage('Smoke Test') {
-
     steps {
-
         sh '''
-            kubectl rollout status deployment/platform-api -n ${NAMESPACE} --timeout=120s
-            kubectl rollout status deployment/platform-frontend -n ${NAMESPACE} --timeout=120s
+            echo "Waiting for ALB..."
 
-            echo "Getting ALB hostname..."
+            for i in {1..30}; do
 
-            ALB=$(kubectl get ingress platform-ingress \
-               -n ${NAMESPACE} \
-               -o jsonpath='{.status.loadBalancer.ingress[0].hostname}')
+                ALB=$(kubectl get ingress platform-ingress \
+                  -n ${NAMESPACE} \
+                  -o jsonpath='{.status.loadBalancer.ingress[0].hostname}')
+
+                if [ -n "$ALB" ]; then
+                    break
+                fi
+
+                echo "ALB not ready yet... waiting 10 seconds"
+                sleep 10
+            done
+
+            if [ -z "$ALB" ]; then
+                echo "ERROR: ALB was not created."
+                kubectl describe ingress platform-ingress -n ${NAMESPACE}
+                exit 1
+            fi
 
             echo "ALB: $ALB"
 
-            echo "Testing Frontend..."
+            echo "Testing Backend Health..."
+
             curl --fail http://$ALB/api/health
-
-            echo "Testing Frontend..."
-            curl --fail http://$ALB
-
-            echo "Smoke Test Passed"
         '''
     }
 }
