@@ -190,36 +190,56 @@ pipeline {
         stage('Smoke Test') {
     steps {
         sh '''
-            echo "Waiting for ALB..."
+            echo "Waiting for ALB hostname..."
 
             i=1
             while [ $i -le 30 ]; do
 
                 ALB=$(kubectl get ingress platform-ingress \
-                  -n ${NAMESPACE} \
-                  -o jsonpath='{.status.loadBalancer.ingress[0].hostname}')
+                    -n ${NAMESPACE} \
+                    -o jsonpath='{.status.loadBalancer.ingress[0].hostname}')
 
                 if [ -n "$ALB" ]; then
                     break
                 fi
 
-                echo "ALB not ready yet... waiting 10 seconds"
+                echo "ALB hostname not available yet... waiting 10 seconds"
                 sleep 10
-
                 i=$((i+1))
             done
 
             if [ -z "$ALB" ]; then
-                echo "ERROR: ALB was not created."
+                echo "ERROR: ALB hostname not found."
                 kubectl describe ingress platform-ingress -n ${NAMESPACE}
                 exit 1
             fi
 
-            echo "ALB: $ALB"
+            echo "ALB Hostname: $ALB"
+
+            echo "Waiting for ALB DNS to resolve...!"
+
+            i=1
+            while [ $i -le 30 ]; do
+
+                if nslookup "$ALB" >/dev/null 2>&1; then
+                    echo "DNS propagation completed."
+                    break
+                fi
+
+                echo "DNS not ready yet... waiting 10 seconds"
+                sleep 10
+                i=$((i+1))
+            done
+
+            if ! nslookup "$ALB" >/dev/null 2>&1; then
+                echo "ERROR: ALB DNS is still not resolvable."
+                exit 1
+            fi
 
             echo "Testing Backend Health..."
 
-            curl --fail http://$ALB/api/health
+            curl --fail --retry 10 --retry-delay 10 --retry-connrefused \
+                http://$ALB/api/health
         '''
     }
 }
