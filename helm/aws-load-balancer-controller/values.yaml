@@ -1,0 +1,11 @@
+clusterName: platform-demo-eks
+
+vpcId: vpc-0c8f9b25a7b6c9467
+
+replicaCount: 1
+
+serviceAccount:
+  create: true
+  name: aws-load-balancer-controller
+  annotations:
+    eks.amazonaws.com/role-arn: arn:aws:iam::003107248036:role/AmazonEKSLoadBalancerControllerRole

@@ -1,0 +1,37 @@
+replicaCount: 1
+
+image:
+  repository: rahulltelkar/platform-frontend
+  pullPolicy: Always
+  tag: latest
+
+service:
+  type: ClusterIP
+  port: 80
+
+ingress:
+  enabled: false
+  #className: nginx
+
+  hosts:
+    - host: platform-frontend.local
+      paths:
+        - path: /
+          pathType: Prefix
+
+resources:
+  requests:
+    cpu: 10m
+    memory: 128Mi
+
+  limits:
+    cpu: 500m
+    memory: 512Mi
+
+autoscaling:
+  enabled: true
+
+  minReplicas: 1
+  maxReplicas: 5
+
+  targetCPUUtilizationPercentage: 70

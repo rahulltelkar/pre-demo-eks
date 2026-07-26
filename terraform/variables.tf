@@ -27,10 +27,22 @@ variable "cluster_name" {
   type        = string
 }
 
-variable "instance_type" {
-  description = "EC2 instance type for worker nodes"
+variable "system_instance_type" {
+  description = "EC2 instance type for system node group"
   type        = string
-  default     = "t3.micro"
+  default     = "t3.small"
+}
+
+variable "frontend_instance_type" {
+  description = "EC2 instance type for frontend node group"
+  type        = string
+  default     = "t3.small"
+}
+
+variable "backend_instance_type" {
+  description = "EC2 instance type for backend node group"
+  type        = string
+  default     = "t3.small"
 }
 
 variable "kubernetes_version" {

@@ -1,0 +1,68 @@
+apiVersion: apps/v1
+kind: Deployment
+
+metadata:
+  name: {{ include "platform-frontend.fullname" . }}
+  labels:
+    app: {{ include "platform-frontend.name" . }}
+
+spec:
+  replicas: {{ .Values.replicaCount }}
+
+  selector:
+    matchLabels:
+      app: {{ include "platform-frontend.name" . }}
+
+  template:
+    metadata:
+      labels:
+        app: {{ include "platform-frontend.name" . }}
+
+    spec:
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: workload
+                    operator: In
+                    values:
+                      - frontend
+
+      tolerations:
+        - key: workload
+          operator: Equal
+          value: frontend
+          effect: NoSchedule
+
+  template:
+    metadata:
+      labels:
+        app: {{ include "platform-frontend.name" . }}
+
+    spec:
+      containers:
+        - name: platform-frontend
+
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+
+          ports:
+            - containerPort: 80
+
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 80
+            initialDelaySeconds: 15
+            periodSeconds: 10
+
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 80
+            initialDelaySeconds: 5
+            periodSeconds: 5
+
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}

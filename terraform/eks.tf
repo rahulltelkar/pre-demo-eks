@@ -36,7 +36,7 @@ resource "aws_eks_node_group" "frontend" {
     aws_subnet.public_2.id
   ]
 
-  instance_types = [var.instance_type]
+  instance_types = [var.frontend_instance_type]
   capacity_type  = "ON_DEMAND"
   disk_size      = 20
 
@@ -81,7 +81,7 @@ resource "aws_eks_node_group" "backend" {
     aws_subnet.public_2.id
   ]
 
-  instance_types = [var.instance_type]
+  instance_types = [var.backend_instance_type]
   capacity_type  = "ON_DEMAND"
   disk_size      = 20
 
@@ -125,7 +125,7 @@ resource "aws_eks_node_group" "system" {
     aws_subnet.public_2.id
   ]
 
-  instance_types = [var.instance_type]
+  instance_types = [var.system_instance_type]
   capacity_type  = "ON_DEMAND"
   disk_size      = 20
 

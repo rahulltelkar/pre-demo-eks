@@ -1,0 +1,39 @@
+{{- if .Values.ingress.enabled }}
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+
+metadata:
+  name: {{ .Release.Name }}
+  labels:
+    app.kubernetes.io/name: {{ .Chart.Name }}
+
+  annotations:
+    alb.ingress.kubernetes.io/scheme: {{ .Values.ingress.scheme }}
+    alb.ingress.kubernetes.io/target-type: {{ .Values.ingress.targetType }}
+    alb.ingress.kubernetes.io/listen-ports: '{{ .Values.ingress.listenPorts }}'
+
+spec:
+  ingressClassName: {{ .Values.ingress.className }}
+
+  rules:
+    - http:
+        paths:
+
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ .Values.ingress.frontendService.name }}
+                port:
+                  number: {{ .Values.ingress.frontendService.port }}
+
+          - path: /api
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ .Values.ingress.backendService.name }}
+                port:
+                  number: {{ .Values.ingress.backendService.port }}
+
+{{- end }}

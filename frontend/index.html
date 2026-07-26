@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Platform Operations Dashboard</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <header>
+        <h1>🚀 Platform Operations Dashboard</h1>
+        <p>FastAPI | Docker | Kubernetes | Helm | Jenkins</p>
+    </header>
+
+    <main>
+
+        <!-- Backend Status -->
+        <section class="card">
+            <h2>Backend Status</h2>
+
+            <div class="row">
+                <span>Status</span>
+                <span id="status">Checking...</span>
+            </div>
+
+            <div class="row">
+                <span>Response Time</span>
+                <span id="responseTime">-</span>
+            </div>
+
+            <div class="row">
+                <span>Last Checked</span>
+                <span id="lastChecked">-</span>
+            </div>
+
+            <button id="healthBtn">
+                Check Backend Health
+            </button>
+        </section>
+
+        <!-- Platform Details -->
+        <section class="card">
+
+            <h2>Platform Information</h2>
+
+            <div id="platformInfo">
+                Loading...
+            </div>
+
+        </section>
+
+        <!-- System Details -->
+        <section class="card">
+
+            <h2>System Information</h2>
+
+            <div id="systemInfo">
+                Loading...
+            </div>
+
+        </section>
+
+    </main>
+
+    <script src="script.js"></script>
+
+</body>
+</html>

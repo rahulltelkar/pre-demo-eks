@@ -1,0 +1,18 @@
+ingress:
+  enabled: true
+
+  className: alb
+
+  scheme: internet-facing
+
+  targetType: ip
+
+  listenPorts: '[{"HTTP":80}]'
+
+  frontendService:
+    name: platform-frontend
+    port: 80
+
+  backendService:
+    name: platform-api
+    port: 8000
