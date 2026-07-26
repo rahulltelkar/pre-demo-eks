@@ -130,6 +130,9 @@ pipeline {
                 --namespace ${NAMESPACE} \
                 --set image.repository=${FRONTEND_IMAGE} \
                 --set image.tag=${IMAGE_TAG}
+            helm upgrade --install platform-ingress \
+                helm/platform-ingress \
+                --namespace ${NAMESPACE}
         """
     }
 }
@@ -190,6 +193,7 @@ pipeline {
         sh '''
             helm rollback platform-api -n ${NAMESPACE} || true
             helm rollback platform-frontend -n ${NAMESPACE} || true
+            helm rollback platform-ingress -n ${NAMESPACE} || true
         '''
     }
 
