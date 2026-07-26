@@ -13,6 +13,9 @@ metadata:
     alb.ingress.kubernetes.io/target-type: {{ .Values.ingress.targetType }}
     alb.ingress.kubernetes.io/listen-ports: '{{ .Values.ingress.listenPorts }}'
 
+    alb.ingress.kubernetes.io/healthcheck-path: /api/health
+    alb.ingress.kubernetes.io/success-codes: "200"
+
 spec:
   ingressClassName: {{ .Values.ingress.className }}
 
