@@ -596,3 +596,51 @@ After a successful deployment:
 - API requests are routed through Kubernetes Ingress to the FastAPI backend.
 - Kubernetes manages application scaling, networking, and self-healing.
 - Jenkins verifies that the deployment completed successfully before marking the pipeline as successful.
+
+  ## Load Testing
+
+The project uses **k6** to perform basic load testing after a successful deployment.
+
+The load test validates that the application is accessible through the AWS Application Load Balancer (ALB) and can handle concurrent requests.
+
+---
+
+### Objectives
+
+The load test is used to:
+
+- Verify application availability
+- Validate API responsiveness
+- Simulate concurrent user requests
+- Detect deployment issues after release
+
+---
+
+### CI/CD Integration
+
+The Jenkins pipeline automatically executes the k6 load test after:
+
+- Docker images are built and pushed
+- Helm deployment completes successfully
+- Smoke testing confirms the application is healthy
+
+This provides an additional layer of deployment validation before the pipeline is marked as successful.
+
+---
+
+### Running the Test Manually
+
+```bash
+k6 run --env BASE_URL=http://<ALB_HOSTNAME> k6/load.js
+```
+
+---
+
+### Benefits
+
+Using k6 provides several advantages:
+
+- Automated post-deployment validation
+- Performance verification
+- Early detection of runtime issues
+- Repeatable load testing
