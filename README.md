@@ -1253,6 +1253,31 @@ The following enhancements could be implemented to further improve the project's
 - Add role-based access control (RBAC).
 - Improve frontend functionality and user experience.
 
+---
+
+### Repository Organization
+
+Currently, the Helm charts and configuration used to deploy cluster-level components such as the AWS Load Balancer Controller and Metrics Server are maintained within the application repository.
+
+To keep the project focused and within the available development timeline, these components were not moved to the infrastructure repository.
+
+As a future enhancement, these cluster-level components will be managed alongside the infrastructure code to provide a clearer separation of responsibilities:
+
+- **Infrastructure Repository**
+  - Amazon EKS infrastructure
+  - AWS Load Balancer Controller
+  - Metrics Server
+  - Cluster-level add-ons
+
+- **Application Repository**
+  - Frontend application
+  - Backend application
+  - Application Helm charts
+  - CI/CD pipeline
+  - Load testing
+
+This separation more closely aligns with production environments, where platform components are managed independently from application deployments.
+
   ## Prerequisites
 
 Before building or deploying the application, ensure the following software and services are available.
