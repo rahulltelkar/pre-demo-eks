@@ -228,3 +228,81 @@ The repository is organized by responsibility to improve readability and maintai
 - **Performance Testing** – k6 scripts for validating application performance.
 
 This structure separates development, deployment, automation, and testing concerns, making the project easier to maintain and extend.
+
+## Application Components
+
+The application is built using a modular two-tier architecture, where each component has a specific responsibility.
+
+---
+
+### Frontend
+
+The frontend is a lightweight static web application built using HTML, CSS, and JavaScript. It is served using NGINX and provides a user interface for interacting with the backend API.
+
+**Responsibilities**
+
+- Display the web interface
+- Invoke backend REST APIs
+- Present application and system information
+- Run as an independent Kubernetes Deployment
+
+---
+
+### Backend
+
+The backend is developed using FastAPI and exposes REST APIs that provide application health, metadata, and runtime system information.
+
+Available APIs include:
+
+- `/api/health` – Returns the application health status.
+- `/api/info` – Returns application metadata such as application name, version, and environment.
+- `/api/system` – Returns runtime information including hostname, operating system, and Python version.
+
+The backend is deployed independently as a Kubernetes Deployment.
+
+---
+
+### Docker
+
+Both the frontend and backend are containerized using Docker.
+
+Separate Dockerfiles are maintained for each application component, allowing them to be built, versioned, and deployed independently.
+
+---
+
+### Helm Charts
+
+The application is deployed using Helm charts.
+
+Separate Helm charts are provided for:
+
+- Frontend
+- Backend API
+- Kubernetes Ingress
+
+Supporting Helm configurations are also included for:
+
+- AWS Load Balancer Controller
+- Metrics Server
+
+This modular Helm structure simplifies application deployment, upgrades, and configuration management.
+
+---
+
+### Jenkins CI/CD Pipeline
+
+A Jenkins pipeline automates the application deployment workflow by:
+
+- Building Docker images
+- Pushing images to the container registry
+- Deploying the application to Amazon EKS using Helm
+
+This enables repeatable and consistent deployments.
+
+---
+
+### Load Testing
+
+The repository includes k6 scripts for basic performance testing.
+
+These scripts simulate concurrent user requests and help validate application availability and responsiveness after deployment.
