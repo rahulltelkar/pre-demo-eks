@@ -483,11 +483,6 @@ These validation steps help identify chart configuration issues before deploymen
 
 ---
 
-### Release Management
-
-Each application component is deployed as an independent Helm release, allowing the frontend, backend, and ingress resources to be upgraded or rolled back independently when required.
----
-
 ### Pipeline Highlights
 
 The pipeline includes several production-inspired practices:
