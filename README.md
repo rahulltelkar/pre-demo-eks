@@ -644,3 +644,128 @@ Using k6 provides several advantages:
 - Performance verification
 - Early detection of runtime issues
 - Repeatable load testing
+
+## Application Verification
+
+After the application has been deployed successfully, the following commands can be used to verify that all components are running correctly.
+
+---
+
+### Verify Kubernetes Resources
+
+Check that all application pods are running.
+
+```bash
+kubectl get pods -n <Namespace>
+```
+
+Expected output:
+
+- Frontend pod in `Running` state
+- Backend pod in `Running` state
+
+---
+
+### Verify Services
+
+List the Kubernetes services.
+
+```bash
+kubectl get svc -n <Namespace>
+```
+
+Expected output:
+
+- Frontend Service
+- Backend Service
+
+---
+
+### Verify Ingress
+
+Verify that the Kubernetes Ingress has been created and an AWS Application Load Balancer (ALB) has been provisioned.
+
+```bash
+kubectl get ingress -n <Namespace>
+```
+
+The output should display the ALB hostname under the **ADDRESS** column.
+
+---
+
+### Verify Application Health
+
+Check the backend health endpoint.
+
+```bash
+curl http://<ALB_HOSTNAME>/api/health
+```
+
+Expected response:
+
+```json
+{
+  "status": "UP"
+}
+```
+
+---
+
+### Verify Application Information
+
+Retrieve application metadata.
+
+```bash
+curl http://<ALB_HOSTNAME>/api/info
+```
+
+Expected response:
+
+- Application name
+- Version
+- Environment
+
+---
+
+### Verify Runtime Information
+
+Retrieve runtime system details.
+
+```bash
+curl http://<ALB_HOSTNAME>/api/system
+```
+
+Expected response includes:
+
+- Hostname
+- Operating system
+- Python version
+
+---
+
+### Verify Helm Releases
+
+Confirm that all Helm releases have been deployed successfully.
+
+```bash
+helm list -n <Namespace>
+```
+
+Expected releases:
+
+- platform-api
+- platform-frontend
+- platform-ingress
+
+---
+
+### Deployment Success Checklist
+
+- ✅ Frontend pod is running.
+- ✅ Backend pod is running.
+- ✅ Kubernetes services are available.
+- ✅ Ingress has been assigned an ALB hostname.
+- ✅ Health endpoint returns HTTP 200.
+- ✅ Application metadata endpoint is accessible.
+- ✅ Runtime information endpoint is accessible.
+- ✅ Helm releases are deployed successfully.
