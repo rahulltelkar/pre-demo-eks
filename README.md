@@ -306,3 +306,68 @@ This enables repeatable and consistent deployments.
 The repository includes k6 scripts for basic performance testing.
 
 These scripts simulate concurrent user requests and help validate application availability and responsiveness after deployment.
+
+## Docker Configuration
+
+The frontend and backend applications are containerized independently using Docker. Each component has its own Dockerfile, allowing them to be built, versioned, and deployed separately.
+
+---
+
+### Frontend Container
+
+The frontend is packaged as a lightweight NGINX container that serves the static web application.
+
+The Docker image includes:
+
+- HTML
+- CSS
+- JavaScript
+- NGINX configuration
+
+The container is responsible for serving the user interface and forwarding API requests to the backend service.
+
+---
+
+### Backend Container
+
+The backend is built using FastAPI and packaged into a separate Docker image.
+
+The Docker image includes:
+
+- FastAPI application source code
+- Python dependencies
+- Application configuration
+
+The backend exposes REST APIs that provide application health, metadata, and runtime system information.
+
+---
+
+### Image Build Process
+
+Each application component is built independently using its respective Dockerfile.
+
+Example commands:
+
+```bash
+# Build frontend image
+docker build -t platform-frontend:latest ./frontend
+
+# Build backend image
+docker build -t platform-api:latest ./backend
+```
+
+The generated images are then pushed to a container registry as part of the Jenkins CI/CD pipeline before being deployed to Amazon EKS.
+
+---
+
+### Why Separate Docker Images?
+
+Maintaining separate container images provides several benefits:
+
+- Independent development and deployment
+- Faster application updates
+- Smaller container images
+- Easier version management
+- Improved scalability
+
+For example, updates to the frontend can be deployed without rebuilding or redeploying the backend, and vice versa.
