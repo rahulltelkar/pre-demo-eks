@@ -1,3 +1,10 @@
+![AWS](https://img.shields.io/badge/AWS-EKS-orange)
+![Terraform](https://img.shields.io/badge/Terraform-1.x-purple)
+![Kubernetes](https://img.shields.io/badge/Kubernetes-1.33-blue)
+![Docker](https://img.shields.io/badge/Docker-Containerized-blue)
+![Helm](https://img.shields.io/badge/Helm-3.x-0F1689)
+![Jenkins](https://img.shields.io/badge/Jenkins-CI%2FCD-red)
+
 # Cloud-Native Two-Tier Application on Amazon EKS
 
 ## Project Overview
@@ -47,26 +54,25 @@ This repository provisions:
 
 The application follows a cloud-native two-tier architecture deployed on Amazon Elastic Kubernetes Service (Amazon EKS).
 
-```text
-                         Internet
-                             │
-                             ▼
-              AWS Application Load Balancer
-                             │
-                             ▼
-                    Kubernetes Ingress
-                             │
-          ┌──────────────────┴──────────────────┐
-          ▼                                     ▼
-Frontend Service                     Backend API Service
-          │                                     │
-          ▼                                     ▼
-Frontend Pods                        Backend Pods
- (Nginx + Static UI)              (Python REST API)
-          │
-          ▼
-     Amazon EKS Cluster
-```
+                               🌍 Internet
+                                    │
+                                    ▼
+                          ⚖️ AWS ALB (Ingress)
+                                    │
+                                    ▼
+                          🚪 Kubernetes Ingress
+                                    │
+             ┌──────────────────────┴──────────────────────┐
+             ▼                                             ▼
+     🌐 Frontend Service                           ⚙️ Backend Service
+             │                                             │
+             ▼                                             ▼
+      📦 Frontend Pod(s)                           📦 Backend Pod(s)
+      (NGINX + HTML/CSS/JS)                   (FastAPI + Python)
+             │                                             │
+             └──────────────────────┬──────────────────────┘
+                                    ▼
+                           ☸️ Amazon EKS Cluster
 
 ---
 
