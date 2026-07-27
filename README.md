@@ -914,3 +914,126 @@ Managing dependencies through `requirements.txt` provides several advantages:
 - Verify application health after deployment using dedicated health endpoints.
 - Include automated smoke testing and load testing as part of the deployment pipeline.
 - Validate Kubernetes resources after deployment using `kubectl` and Helm commands.
+
+## Troubleshooting
+
+The following are common issues that may occur during application deployment and their possible resolutions.
+
+---
+
+### Docker Image Build Failure
+
+**Issue**
+
+Docker image build fails during the Jenkins pipeline.
+
+**Possible Causes**
+
+- Docker daemon is not running.
+- Invalid Dockerfile configuration.
+- Missing application dependencies.
+
+**Resolution**
+
+- Verify that the Docker service is running.
+- Review Docker build logs.
+- Confirm that `requirements.txt` and application source files are present.
+
+---
+
+### Trivy Scan Failure
+
+**Issue**
+
+Trivy reports High or Critical vulnerabilities.
+
+**Possible Causes**
+
+- Vulnerable base image.
+- Outdated application dependencies.
+
+**Resolution**
+
+- Update the base image.
+- Upgrade vulnerable dependencies.
+- Rebuild and rescan the Docker images.
+
+---
+
+### Helm Deployment Failure
+
+**Issue**
+
+Helm deployment fails.
+
+**Possible Causes**
+
+- Invalid Helm chart configuration.
+- Missing Kubernetes resources.
+- Incorrect values configuration.
+
+**Resolution**
+
+- Run `helm lint`.
+- Run `helm template`.
+- Verify the Helm values files.
+
+---
+
+### Application Load Balancer Not Created
+
+**Issue**
+
+The Ingress resource does not receive an ALB hostname.
+
+**Possible Causes**
+
+- AWS Load Balancer Controller is not running.
+- Missing IAM permissions.
+- Incorrect Ingress annotations.
+
+**Resolution**
+
+- Verify the AWS Load Balancer Controller deployment.
+- Check controller logs.
+- Verify Ingress annotations.
+
+---
+
+### Application Health Check Failure
+
+**Issue**
+
+The `/api/health` endpoint returns an error.
+
+**Possible Causes**
+
+- Backend pod is not running.
+- Service routing issue.
+- Application startup failure.
+
+**Resolution**
+
+- Verify pod status.
+- Check application logs.
+- Verify Kubernetes Service and Ingress configuration.
+
+---
+
+### Load Test Failure
+
+**Issue**
+
+The k6 load test fails.
+
+**Possible Causes**
+
+- Application is not reachable.
+- ALB is not fully provisioned.
+- Backend service is unavailable.
+
+**Resolution**
+
+- Verify the ALB hostname.
+- Ensure the application is healthy.
+- Re-run the smoke test before executing the load test.
