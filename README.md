@@ -180,3 +180,53 @@ Metrics Server collects CPU and memory usage metrics from Kubernetes nodes and p
 #### k6
 
 k6 is used to perform load testing and validate the application's behavior under concurrent user traffic.
+
+## Repository Structure
+
+```text
+.
+├── backend/                  # FastAPI backend application
+├── frontend/                 # Static frontend application
+├── helm/                     # Helm charts for Kubernetes deployment
+│   ├── aws-load-balancer-controller/
+│   ├── metrics-server/
+│   ├── platform-api/
+│   ├── platform-frontend/
+│   └── platform-ingress/
+├── jenkins/                  # Jenkins controller configuration
+├── k6/                       # Load testing scripts
+├── Jenkinsfile               # CI/CD pipeline definition
+└── README.md
+```
+
+---
+
+### Directory Overview
+
+| Directory/File | Description |
+|---------------|-------------|
+| `backend/` | Contains the FastAPI backend application and its Dockerfile. |
+| `frontend/` | Contains the static web application (HTML, CSS, JavaScript) and NGINX configuration. |
+| `helm/` | Contains Helm charts used to deploy the application and supporting Kubernetes components. |
+| `platform-api/` | Helm chart for deploying the backend API. |
+| `platform-frontend/` | Helm chart for deploying the frontend application. |
+| `platform-ingress/` | Helm chart that exposes the application using Kubernetes Ingress. |
+| `aws-load-balancer-controller/` | Helm values used to deploy the AWS Load Balancer Controller. |
+| `metrics-server/` | Helm values used to deploy Kubernetes Metrics Server. |
+| `jenkins/` | Docker configuration for the Jenkins environment. |
+| `k6/` | Load testing scripts used to validate application performance. |
+| `Jenkinsfile` | Defines the CI/CD pipeline for building and deploying the application. |
+
+---
+
+### Repository Organization
+
+The repository is organized by responsibility to improve readability and maintainability.
+
+- **Application Source** – Frontend and backend application code.
+- **Containerization** – Dockerfiles for packaging the applications.
+- **Deployment** – Helm charts for Kubernetes deployment.
+- **CI/CD** – Jenkins pipeline for automated build and deployment.
+- **Performance Testing** – k6 scripts for validating application performance.
+
+This structure separates development, deployment, automation, and testing concerns, making the project easier to maintain and extend.
