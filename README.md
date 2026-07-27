@@ -426,6 +426,66 @@ Amazon EKS Cluster
 | Rollback | Automatically rolls back Helm releases if the deployment fails. |
 | Cleanup | Cleans the Jenkins workspace after every pipeline execution. |
 
+## Helm Charts
+
+The application is deployed to Amazon EKS using Helm, the Kubernetes package manager. Helm simplifies application deployment by packaging Kubernetes resources into reusable and configurable charts.
+
+---
+
+### Helm Chart Structure
+
+The repository contains separate Helm charts for each deployable application component.
+
+| Helm Chart | Purpose |
+|------------|---------|
+| `platform-api` | Deploys the FastAPI backend application. |
+| `platform-frontend` | Deploys the frontend web application. |
+| `platform-ingress` | Configures Kubernetes Ingress to expose the application through the AWS Load Balancer Controller. |
+| `aws-load-balancer-controller` | Provides custom configuration values for deploying the AWS Load Balancer Controller. |
+| `metrics-server` | Provides configuration for deploying the Kubernetes Metrics Server. |
+
+---
+
+### Application Deployment
+
+The Jenkins pipeline deploys the application using Helm upgrade commands, ensuring that existing releases are upgraded when present or installed if they do not already exist.
+
+The deployment includes:
+
+- Backend application
+- Frontend application
+- Kubernetes Ingress
+
+Supporting cluster components such as the AWS Load Balancer Controller and Metrics Server are also installed or upgraded as part of the deployment process.
+
+---
+
+### Why Helm?
+
+Helm provides several advantages over managing individual Kubernetes manifests:
+
+- Simplifies Kubernetes deployments
+- Supports reusable deployment templates
+- Enables environment-specific configuration through values files
+- Makes application upgrades and rollbacks straightforward
+- Provides release management for Kubernetes applications
+
+---
+
+### Helm Validation
+
+Before deployment, the Jenkins pipeline validates the Helm charts by executing:
+
+- Helm Lint
+- Helm Template
+
+These validation steps help identify chart configuration issues before deployment to the Kubernetes cluster.
+
+---
+
+### Release Management
+
+Each application component is deployed as an independent Helm release, allowing the frontend, backend, and ingress resources to be upgraded or rolled back independently when required.
 ---
 
 ### Pipeline Highlights
