@@ -98,3 +98,29 @@ Frontend Pods                        Backend Pods
 | Jenkins | Automates build and deployment of the application |
 | Metrics Server | Provides Kubernetes resource metrics |
 | k6 | Performs load testing to validate application performance |
+
+## Application Overview
+
+This project demonstrates a cloud-native two-tier web application consisting of a static frontend and a Python-based backend API.
+
+The backend exposes REST APIs that provide application and runtime information, including:
+
+- Application health status
+- Application metadata (name, version, and environment)
+- Runtime system information such as hostname, operating system, and Python version
+
+The frontend provides a simple web interface that consumes these APIs and displays the information to the user.
+
+The frontend and backend are deployed as independent Kubernetes workloads and communicate internally through Kubernetes Services.
+
+The application is containerized using Docker, deployed to Amazon EKS using Helm charts, and exposed externally through an AWS Application Load Balancer (ALB). A Jenkins CI/CD pipeline automates the build and deployment process, and k6 scripts are included for basic load testing.
+
+Although the application functionality is intentionally simple, its primary purpose is to demonstrate modern cloud-native application deployment practices, including containerization, Kubernetes orchestration, Helm-based deployments, CI/CD automation, and application validation on Amazon EKS.
+
+### Available API Endpoints
+
+| Endpoint | Description |
+|----------|-------------|
+| `/api/health` | Returns the application health status. |
+| `/api/info` | Returns application metadata including name, version, and environment. |
+| `/api/system` | Returns runtime information such as hostname, operating system, and Python version. |
