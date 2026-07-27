@@ -1245,3 +1245,58 @@ The following enhancements could be implemented to further improve the project's
 - Implement user authentication and authorization.
 - Add role-based access control (RBAC).
 - Improve frontend functionality and user experience.
+
+  ## Prerequisites
+
+Before building or deploying the application, ensure the following software and services are available.
+
+### Required Software
+
+| Tool | Purpose |
+|------|---------|
+| Git | Clone the repository |
+| Docker | Build and run container images |
+| Kubernetes CLI (kubectl) | Interact with the EKS cluster |
+| Helm 3.x | Deploy Kubernetes resources |
+| Jenkins | Execute the CI/CD pipeline |
+| AWS CLI | Authenticate and interact with AWS services |
+| k6 | Execute load tests |
+| Trivy | Scan container images for vulnerabilities |
+
+---
+
+### AWS Requirements
+
+- AWS Account
+- Amazon EKS Cluster
+- IAM permissions for EKS deployment
+- AWS Load Balancer Controller installed
+- Metrics Server installed
+- Docker Hub account (or another supported container registry)
+
+---
+
+### Backend Dependencies
+
+The backend application is built using Python and manages its dependencies through `requirements.txt`.
+
+Python packages are automatically installed during the Docker image build using:
+
+```bash
+pip install --no-cache-dir -r requirements.txt
+```
+
+This ensures consistent dependency versions across development, testing, and production environments.
+
+---
+
+### Frontend Dependencies
+
+The frontend is a static web application built with:
+
+- HTML5
+- CSS3
+- JavaScript
+- NGINX
+
+No additional package manager (such as npm or yarn) is required.
