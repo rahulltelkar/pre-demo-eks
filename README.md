@@ -709,6 +709,78 @@ Expected response:
 }
 ```
 
+## Best Practices
+
+The following best practices were followed while developing and deploying this project to improve maintainability, reliability, security, and deployment consistency.
+
+---
+
+### Containerization
+
+- Build the frontend and backend as separate Docker images to enable independent development and deployment.
+- Keep container images lightweight by including only the required dependencies.
+- Use image versioning alongside the `latest` tag for better release management and traceability.
+- Maintain Python dependencies in a dedicated `requirements.txt` file instead of installing packages individually in the Dockerfile.
+- Copy `requirements.txt` into the Docker image before copying the application source code to leverage Docker layer caching and reduce image build time.
+- Use `--no-cache-dir` during `pip install` to reduce the final Docker image size by avoiding unnecessary package cache files.
+
+**Why use `requirements.txt`?**
+
+Managing dependencies through `requirements.txt` provides several advantages:
+
+- Ensures consistent dependency versions across development, testing, and production environments.
+- Makes application builds reproducible and predictable.
+- Simplifies dependency management by maintaining all Python packages in a single file.
+- Improves Docker build performance by taking advantage of Docker layer caching. If only the application code changes and `requirements.txt` remains unchanged, Docker reuses the cached dependency installation layer instead of reinstalling all packages.
+- Keeps the Dockerfile clean and easier to maintain.
+
+---
+
+### Kubernetes Deployment
+
+- Package Kubernetes resources using Helm instead of maintaining raw Kubernetes manifests.
+- Deploy the frontend, backend, and ingress as independent Helm releases for easier upgrades and rollbacks.
+- Use Kubernetes Services for internal communication between application components.
+- Expose the application externally using Kubernetes Ingress integrated with the AWS Load Balancer Controller.
+- Deploy supporting Kubernetes components, such as the Metrics Server and AWS Load Balancer Controller, before deploying the application.
+
+---
+
+### CI/CD
+
+- Automate the complete build and deployment workflow using Jenkins.
+- Build frontend and backend Docker images in parallel to reduce pipeline execution time.
+- Perform container image vulnerability scanning using Trivy before deployment.
+- Validate Helm charts using `helm lint` and `helm template` before deploying to the cluster.
+- Perform automated smoke testing after deployment to verify application availability.
+- Execute k6 load testing to validate basic application performance.
+- Automatically roll back Helm releases if deployment verification fails.
+- Clean the Jenkins workspace after every pipeline execution to avoid leftover artifacts.
+
+---
+
+### Security
+
+- Store Docker Hub credentials securely using Jenkins Credentials instead of hardcoding sensitive information.
+- Scan container images for High and Critical vulnerabilities using Trivy before pushing them to the container registry.
+- Avoid storing secrets, passwords, or API keys directly in the application source code or Docker images.
+
+---
+
+### Repository Organization
+
+- Maintain separate repositories for infrastructure and application code to clearly separate responsibilities.
+- Organize application source code, Helm charts, CI/CD pipeline definitions, and testing scripts into dedicated directories.
+- Track all source code, deployment configurations, and automation scripts using Git version control.
+
+---
+
+### Validation and Testing
+
+- Validate Helm charts before deployment to detect configuration issues early.
+- Verify application health after deployment using dedicated health endpoints.
+- Include automated smoke testing and load testing as part of the deployment pipeline.
+- Validate Kubernetes resources after deployment using `kubectl` and Helm commands.
 ---
 
 ### Verify Application Information
