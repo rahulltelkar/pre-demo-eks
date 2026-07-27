@@ -193,7 +193,6 @@ k6 is used to perform load testing and validate the application's behavior under
 │   ├── platform-api/
 │   ├── platform-frontend/
 │   └── platform-ingress/
-├── jenkins/                  # Jenkins controller configuration
 ├── k6/                       # Load testing scripts
 ├── Jenkinsfile               # CI/CD pipeline definition
 └── README.md
@@ -213,7 +212,6 @@ k6 is used to perform load testing and validate the application's behavior under
 | `platform-ingress/` | Helm chart that exposes the application using Kubernetes Ingress. |
 | `aws-load-balancer-controller/` | Helm values used to deploy the AWS Load Balancer Controller. |
 | `metrics-server/` | Helm values used to deploy Kubernetes Metrics Server. |
-| `jenkins/` | Docker configuration for the Jenkins environment. |
 | `k6/` | Load testing scripts used to validate application performance. |
 | `Jenkinsfile` | Defines the CI/CD pipeline for building and deploying the application. |
 
