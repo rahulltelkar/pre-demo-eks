@@ -1071,8 +1071,6 @@ However, enterprise CI/CD capabilities such as the following were intentionally 
 - Manual approval gates before deployment
 - Multi-environment promotion (Dev → QA → Staging → Production)
 - Deployment notifications (Slack, Microsoft Teams, Email, etc.)
-- Scheduled deployments and release windows
-- Advanced release management strategies
 
 ---
 
@@ -1141,3 +1139,18 @@ Advanced production capabilities such as:
 - Active-active or active-passive architectures
 
 are not implemented.
+
+---
+### No Persistent Database
+
+The application is intentionally designed without a persistent database to keep the project focused on demonstrating cloud-native deployment practices within the available development timeline.
+
+Instead of implementing data persistence, the backend exposes APIs for health checks, application metadata, and runtime system information.
+
+A production implementation would typically integrate a managed database service such as:
+
+- Amazon RDS (PostgreSQL or MySQL)
+- Amazon DynamoDB
+- Amazon Aurora
+
+along with database migrations, backup strategies, and secure credential management.
