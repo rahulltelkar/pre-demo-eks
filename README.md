@@ -566,6 +566,7 @@ Backend Service
 
 ---
 
+
 ### Deployment Steps
 
 1. A developer pushes application code to the Git repository.
@@ -1306,3 +1307,97 @@ The frontend is a static web application built with:
 - NGINX
 
 No additional package manager (such as npm or yarn) is required.
+
+## Running the Application
+
+The application can be run either locally for development or on the Amazon EKS cluster after deployment.
+
+---
+
+### Run the Backend Locally
+
+Navigate to the backend directory:
+
+```bash
+cd backend
+```
+
+Install the required Python dependencies:
+
+```bash
+pip install -r requirements.txt
+```
+
+Start the FastAPI application using Uvicorn:
+
+```bash
+uvicorn app.main:app --reload
+```
+
+The backend API will be available at:
+
+```
+http://localhost:8000
+```
+
+Useful endpoints:
+
+```
+http://localhost:8000/api/health
+http://localhost:8000/api/info
+http://localhost:8000/api/system
+```
+
+---
+
+### Access the Application in Kubernetes
+
+If the application is deployed on Amazon EKS but an external Load Balancer is not yet available, you can access the frontend or backend using Kubernetes port forwarding.
+
+#### Frontend
+
+```bash
+kubectl port-forward svc/platform-frontend 8080:80 -n platform-demo
+```
+
+Access:
+
+```
+http://localhost:8080
+```
+
+---
+
+#### Backend
+
+```bash
+kubectl port-forward svc/platform-api 8000:8000 -n platform-demo
+```
+
+Access:
+
+```
+http://localhost:8000/api/health
+```
+
+---
+
+### Verify the Deployment
+
+Check that all application pods are running:
+
+```bash
+kubectl get pods -n platform-demo
+```
+
+List the services:
+
+```bash
+kubectl get svc -n platform-demo
+```
+
+View the ingress:
+
+```bash
+kubectl get ingress -n platform-demo
+```
