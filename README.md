@@ -510,3 +510,89 @@ The automated pipeline provides several advantages:
 - Automated application verification
 - Faster release cycles
 - Improved deployment reliability
+
+## Deployment Workflow
+
+The application deployment process follows an automated CI/CD workflow that builds, validates, deploys, and verifies the application on Amazon EKS.
+
+---
+
+### End-to-End Deployment Flow
+
+```text
+Developer
+    │
+    ▼
+Push Code to Git Repository
+    │
+    ▼
+Jenkins Pipeline
+    │
+    ├── Checkout Source Code
+    ├── Build Frontend & Backend Docker Images
+    ├── Trivy Security Scan
+    ├── Push Images to Docker Hub
+    ├── Helm Lint & Template Validation
+    ├── Install/Upgrade Cluster Add-ons
+    ├── Deploy Application using Helm
+    ├── Smoke Test
+    ├── k6 Load Test
+    └── Rollback (if deployment fails)
+    │
+    ▼
+Amazon EKS Cluster
+    │
+    ▼
+AWS Load Balancer Controller
+    │
+    ▼
+Application Load Balancer (ALB)
+    │
+    ▼
+Kubernetes Ingress
+    │
+    ▼
+Frontend Service
+    │
+    ▼
+Backend Service
+```
+
+---
+
+### Deployment Steps
+
+1. A developer pushes application code to the Git repository.
+
+2. Jenkins automatically starts the CI/CD pipeline.
+
+3. The frontend and backend Docker images are built in parallel.
+
+4. Trivy scans both container images for High and Critical vulnerabilities.
+
+5. The validated Docker images are pushed to Docker Hub.
+
+6. Helm validates the deployment configuration using linting and template rendering.
+
+7. Required Kubernetes add-ons such as the Metrics Server and AWS Load Balancer Controller are installed or upgraded.
+
+8. Helm deploys or upgrades the frontend, backend, and ingress resources on the Amazon EKS cluster.
+
+9. The AWS Load Balancer Controller provisions an Application Load Balancer (ALB) for external access.
+
+10. Jenkins performs smoke testing to verify that the application is healthy.
+
+11. A k6 load test validates the application's availability and basic performance.
+
+12. If any deployment stage fails, Jenkins automatically rolls back the Helm releases to the previous stable version.
+
+---
+
+### Deployment Outcome
+
+After a successful deployment:
+
+- The frontend application is accessible through the AWS Application Load Balancer.
+- API requests are routed through Kubernetes Ingress to the FastAPI backend.
+- Kubernetes manages application scaling, networking, and self-healing.
+- Jenkins verifies that the deployment completed successfully before marking the pipeline as successful.
