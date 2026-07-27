@@ -124,3 +124,59 @@ Although the application functionality is intentionally simple, its primary purp
 | `/api/health` | Returns the application health status. |
 | `/api/info` | Returns application metadata including name, version, and environment. |
 | `/api/system` | Returns runtime information such as hostname, operating system, and Python version. |
+
+## Technology Stack
+
+| Technology | Purpose |
+|------------|---------|
+| Python (FastAPI) | Backend REST API development |
+| HTML, CSS, JavaScript | Frontend user interface |
+| Docker | Containerization of frontend and backend applications |
+| Kubernetes | Container orchestration and application deployment |
+| Helm | Kubernetes package management and application deployment |
+| Amazon EKS | Managed Kubernetes service |
+| Jenkins | CI/CD pipeline automation |
+| AWS Load Balancer Controller | Automatic provisioning of AWS Application Load Balancers |
+| NGINX | Serves the static frontend application |
+| Metrics Server | Kubernetes resource metrics collection |
+| k6 | Load and performance testing |
+
+---
+
+### Why These Technologies?
+
+#### Python (FastAPI)
+
+FastAPI is used to build a lightweight and high-performance REST API that exposes application health, metadata, and runtime system information.
+
+#### Docker
+
+Docker packages the frontend and backend into portable container images, ensuring consistent deployments across different environments.
+
+#### Kubernetes
+
+Kubernetes orchestrates application deployment, scaling, networking, and lifecycle management of containerized workloads.
+
+#### Helm
+
+Helm simplifies Kubernetes deployments by packaging related Kubernetes resources into reusable and version-controlled charts.
+
+#### Amazon EKS
+
+Amazon Elastic Kubernetes Service (EKS) provides a managed Kubernetes control plane, reducing operational overhead while offering a production-ready Kubernetes environment.
+
+#### Jenkins
+
+Jenkins automates the application build and deployment workflow, enabling consistent and repeatable CI/CD processes.
+
+#### AWS Load Balancer Controller
+
+The AWS Load Balancer Controller automatically provisions and manages an Application Load Balancer (ALB) based on Kubernetes Ingress resources, providing external access to the application.
+
+#### Metrics Server
+
+Metrics Server collects CPU and memory usage metrics from Kubernetes nodes and pods, enabling resource monitoring.
+
+#### k6
+
+k6 is used to perform load testing and validate the application's behavior under concurrent user traffic.
