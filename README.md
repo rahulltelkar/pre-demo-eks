@@ -371,3 +371,87 @@ Maintaining separate container images provides several benefits:
 - Improved scalability
 
 For example, updates to the frontend can be deployed without rebuilding or redeploying the backend, and vice versa.
+
+## CI/CD Pipeline
+
+The project uses Jenkins to automate the complete application build, validation, deployment, and testing workflow on Amazon EKS.
+
+The pipeline follows a Continuous Integration and Continuous Deployment (CI/CD) approach, reducing manual effort and ensuring consistent deployments.
+
+---
+
+### Pipeline Workflow
+
+```text
+Developer
+    │
+    ▼
+Push Code to Git Repository
+    │
+    ▼
+Jenkins Pipeline
+    │
+    ├── Checkout Source Code
+    ├── Build Docker Images (Parallel)
+    ├── Trivy Image Security Scan
+    ├── Push Images to Docker Hub
+    ├── Helm Lint Validation
+    ├── Helm Template Validation
+    ├── Install Cluster Add-ons
+    ├── Deploy Application using Helm
+    ├── Smoke Test
+    ├── k6 Load Test
+    └── Automatic Rollback (on failure)
+    │
+    ▼
+Amazon EKS Cluster
+```
+
+---
+
+### Pipeline Stages
+
+| Stage | Description |
+|--------|-------------|
+| Checkout | Retrieves the latest application source code from the Git repository. |
+| Build Images | Builds frontend and backend Docker images in parallel to reduce pipeline execution time. |
+| Trivy Scan | Scans Docker images for High and Critical vulnerabilities before deployment. |
+| Push Images | Pushes versioned Docker images to Docker Hub. |
+| Helm Lint | Validates the Helm charts for syntax and configuration issues. |
+| Helm Template | Renders Kubernetes manifests locally to validate Helm templates before deployment. |
+| Install Cluster Add-ons | Installs or upgrades the Metrics Server and AWS Load Balancer Controller required by the application. |
+| Deploy to EKS | Deploys or upgrades the frontend, backend, and Ingress resources using Helm charts. |
+| Smoke Test | Waits for the Application Load Balancer (ALB) to become available and verifies the application's health endpoint. |
+| Load Test | Executes k6 load tests against the deployed application to validate basic performance and availability. |
+| Rollback | Automatically rolls back Helm releases if the deployment fails. |
+| Cleanup | Cleans the Jenkins workspace after every pipeline execution. |
+
+---
+
+### Pipeline Highlights
+
+The pipeline includes several production-inspired practices:
+
+- Parallel Docker image builds for improved execution speed.
+- Container image vulnerability scanning using Trivy.
+- Helm chart validation before deployment.
+- Automated installation of required Kubernetes cluster add-ons.
+- Versioned Docker image deployments.
+- Automated smoke testing after deployment.
+- Basic load testing using k6.
+- Automatic Helm rollback on deployment failure.
+- Workspace cleanup after every pipeline execution.
+
+---
+
+### Benefits of the CI/CD Pipeline
+
+The automated pipeline provides several advantages:
+
+- Consistent and repeatable deployments
+- Reduced manual intervention
+- Early detection of deployment issues
+- Security validation through image scanning
+- Automated application verification
+- Faster release cycles
+- Improved deployment reliability
