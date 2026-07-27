@@ -1037,3 +1037,107 @@ The k6 load test fails.
 - Verify the ALB hostname.
 - Ensure the application is healthy.
 - Re-run the smoke test before executing the load test.
+
+## Known Limitations
+
+This project was developed as a demonstration of deploying a cloud-native two-tier application on Amazon EKS using Docker, Kubernetes, Helm, and Jenkins. To keep the project focused and within practical constraints such as development time and cloud infrastructure costs, some production-grade features were intentionally kept out of scope.
+
+The following limitations should be considered before using this project in a production environment.
+
+---
+
+### Project Scope and Time Constraints
+
+The project was completed within a limited development timeline and is intended to demonstrate core cloud-native deployment practices rather than implement every enterprise feature.
+
+The focus was on building a complete end-to-end deployment pipeline, including containerization, Kubernetes orchestration, CI/CD automation, security scanning, and deployment verification.
+
+---
+
+### Single Environment Deployment
+
+The application is deployed to a single Kubernetes environment.
+
+A production implementation would typically include separate Development, QA, Staging, and Production environments with environment-specific configurations.
+
+---
+
+### Simplified CI/CD Pipeline
+
+The Jenkins pipeline automates application build, validation, deployment, smoke testing, and load testing.
+
+However, enterprise CI/CD capabilities such as the following were intentionally omitted:
+
+- Manual approval gates before deployment
+- Multi-environment promotion (Dev → QA → Staging → Production)
+- Deployment notifications (Slack, Microsoft Teams, Email, etc.)
+- Scheduled deployments and release windows
+- Advanced release management strategies
+
+---
+
+### Public Container Registry
+
+Docker images are published to Docker Hub for simplicity and ease of demonstration.
+
+In a production environment, organizations would typically use a private container registry such as:
+
+- Amazon Elastic Container Registry (Amazon ECR)
+- Harbor
+- JFrog Artifactory
+- Azure Container Registry (ACR)
+- Google Artifact Registry (GAR)
+
+to improve security, access control, and integration with enterprise CI/CD pipelines.
+
+---
+
+### Basic Security Implementation
+
+The project performs container image vulnerability scanning using Trivy.
+
+Additional enterprise security practices such as:
+
+- Secrets management using AWS Secrets Manager or HashiCorp Vault
+- Pod Security Standards
+- Kubernetes Network Policies
+- Runtime security monitoring
+- Image signing and verification
+
+are outside the scope of this project.
+
+---
+
+### Limited Monitoring and Observability
+
+The project validates deployments using smoke tests and k6 load testing.
+
+A production implementation would also include:
+
+- Centralized logging
+- Distributed tracing
+- Application Performance Monitoring (APM)
+- Alerting and monitoring dashboards
+
+---
+
+### Basic Application Functionality
+
+The application exposes REST APIs for health checks, application metadata, and runtime system information.
+
+The primary objective of the project is to demonstrate cloud-native deployment practices rather than implement complex business logic.
+
+---
+
+### Limited High Availability Configuration
+
+The project relies on Kubernetes self-healing and deployment strategies.
+
+Advanced production capabilities such as:
+
+- Multi-region deployment
+- Disaster recovery
+- Cross-region failover
+- Active-active or active-passive architectures
+
+are not implemented.
